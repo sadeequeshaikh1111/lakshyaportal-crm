@@ -69,7 +69,7 @@ return [
             'port' => env('LAKSHYA_DB_PORT', '3306'),
             'database' => env('LAKSHYA_DB_DATABASE', 'lakshyadb'),  // lakshyadb
             'username' => env('LAKSHYA_DB_USERNAME', 'root'),
-            'password' => env('LAKSHYA_DB_PASSWORD', ''),
+            'password' => env('LAKSHYA_DB_PASSWORD', '1234'),
             'unix_socket' => env('LAKSHYA_DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

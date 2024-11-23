@@ -73,15 +73,16 @@ return $btn;
     public function save_edu_details(Request $request)
     {
 
+        $data = CandidateBasicDetail::where('User_id', $request->user_id)->first();
 
-
-      #  $email = Session::get('email'); // Retrieve email from session
-       
+        #$email=$data['email'];
+       $email=$data->email;
+      #  $email = Session::get('email'); // Retrieve email from session;
         $validatedData = $request->validate([
             'universityBoard' => 'required|string',
             'collegeInstitute' => 'required|string',
             'cgpaPercentage' => 'required|string',
-            'yearOfPassing' => 'required|numeric',
+            'passingYear' => 'required|numeric',
             'course' => 'required|string',
             'edu_category'=>'required|string',
             'course'=>'required|string',
@@ -93,10 +94,10 @@ return $btn;
             $eduDetail->university_board = $validatedData['universityBoard'];
             $eduDetail->college_institute = $validatedData['collegeInstitute'];
             $eduDetail->cgpa_percentage = $validatedData['cgpaPercentage'];
-            $eduDetail->passing_year = $validatedData['yearOfPassing'];
+            $eduDetail->passing_year = $validatedData['passingYear'];
             $eduDetail->edu_category = $validatedData['edu_category'];
             $eduDetail->course = $validatedData['course'];
-          #  $eduDetail->email=$validatedData['email'];
+            $eduDetail->email=$email;
             $eduDetail->user_id=$validatedData['user_id'];
             $eduDetail->save();
             return response()->json([

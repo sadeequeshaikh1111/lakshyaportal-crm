@@ -9,6 +9,8 @@
     <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+
 </head>
 <body>
 
@@ -80,64 +82,92 @@
         </table>
     </div>
 </div>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- Add CSRF Token Meta Tag -->
 
 <script>
 
-
     function save() {
-        user_id= document.getElementById('user_id').innerText;
-        universityBoard= $('#universityBoard').val();
-        collegeInstitute= $('#collegeInstitute').val();
-        yearOfPassing= $('#passingYear').val();
-        cgpaPercentage= $('#cgpaPercentage').val();
-        edu_category=$('#cgpaPercentage').val();
-        course= $('#course').val();
-        
-        alert(universityBoard+"  "+collegeInstitute+"  "+passingYear+"  "+cgpaPercentage+"  "+edu_category+" "+course )
+        // Get form values
+        const user_id = document.getElementById('user_id').innerText;
 
-        var formData = {
-            universityBoard: universityBoard,
-            collegeInstitute: collegeInstitute,
-            passingYear: passingYear,
-            cgpaPercentage:cgpaPercentage,       
-            edu_category: edu_category,
-            course: course,
-            user_id:user_id
-            
-                };
-                alert(formData)
+        const universityBoard = $('#universityBoard').val();
+        const collegeInstitute = $('#collegeInstitute').val();
+        const passingYear = $('#passingYear').val();
+        const cgpaPercentage = $('#cgpaPercentage').val();
+        const edu_category = $('#edu_category').val();
+        const course = $('#course').val();
+
         // Perform validation
-        if (!formData.universityBoard || !formData.collegeInstitute || !formData.passingYear || !formData.cgpaPercentage || !formData.edu_category || !formData.course) {
+        if (!universityBoard || !collegeInstitute || !passingYear || !cgpaPercentage || !edu_category || !course) {
             alert("All fields are required.");
             return;
         }
 
-        // Example of handling form submission or AJAX call
-        // Replace with your implementation
-        alert("Data inserted: " + JSON.stringify(formData));
+        // Prepare form data
+        const formData = {
+            user_id: user_id,
+            universityBoard: universityBoard,
+            collegeInstitute: collegeInstitute,
+            passingYear: passingYear,
+            cgpaPercentage: cgpaPercentage,
+            edu_category: edu_category,
+            course: course,
+        };
+
+        // Debug form data
+        console.log("Form Data:", formData);
+
+        // AJAX call to save educational details
         $.ajax({
-        type: 'POST',
-        url: "{{ route('save_edu_details.post') }}",
-        data: formData,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            alert(response.message); // Show success message
-            $('#educationForm')[0].reset(); // Reset form
-            $('#editId').val(''); // Clear editId if needed
-            fetchEducationalDetails_ajax(email);
-        },
-        error: function(xhr, status, error) {
-            alert('An error occurred while saving data.');
-            console.error(error);
-        }
-    });
-        // Reset form
-        $('#educationForm')[0].reset();
-        $('#editId').val('');
+            type: 'POST',
+            url: "{{ route('save_edu_details.post') }}", // Ensure this route exists in Laravel
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            },
+            success: function(response) {
+                alert(response.message || "Data saved successfully!"); // Show success message
+                $('#educationForm')[0].reset(); // Reset form
+              //  $('#editId').val(''); // Clear editId if needed
+              $('#eduDetailsTable').DataTable().ajax.reload(null, false);
+                // Refresh educational details (ensure this function is defined)
+            },
+            error: function(xhr, status, error) {
+                console.error("Error occurred:", error);
+                alert("An error occurred while saving data.");
+            }
+        });
+
     }
 
-    
+
+    function Delete(id) {
+    console.log("Trying to delete data with ID:", id);
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: "{{ route('delete_edu_detail.delete') }}",
+        type: "DELETE",
+        data: {
+            id: id
+        },
+        success: function(response) {
+            console.log("Data deleted successfully:");
+            console.log(response);
+            $('#eduDetailsTable').DataTable().ajax.reload(null, false);
+            // You can process the response data here, e.g., update the table
+
+        },
+        error: function(xhr, status, error) {
+            console.error("Error deleting data:", error);
+        }
+    });
+}
 
 </script>

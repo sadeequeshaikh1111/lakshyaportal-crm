@@ -6,6 +6,7 @@
         </h2>
     </x-slot>
     <link href="{{ asset('assets/css/Account_details.css') }}" rel="stylesheet">
+
     <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{ asset('assets/js/bootstrap.min.js')}}"></script>
@@ -169,6 +170,9 @@
                         <h3 class="font-semibold text-lg text-gray-700 mb-4">Document Details</h3>
                         <div id="document-details" class="mb-6">
                             <p>Loading Document Details...</p>
+                            <div id="user_id_doc">s</div>
+                            @include('Document-details')
+
                         </div>
                     </div>
 
@@ -291,7 +295,10 @@
        fetchEducationalDetails_ajax(userId)    }
 
     function getDocumentDetails(userId) {
-        $('#document-details').html('<p>Loading Document Details...</p>');
+        document.getElementById('user_id_doc').innerText = userId;
+        fetch_doc_details_ajax();
+
+        
     }
 
     function getAppliedExams(userId) {
@@ -336,5 +343,43 @@
         }
     ]
 });}
+
+
+
+function fetch_doc_details_ajax() {
+        const user_id = document.getElementById('user_id').innerText;
+        const user_id_int = parseInt(user_id, 10);
+    console.log("Trying to load data for "+user_id );
+
+    $('#documentTable').DataTable({
+        processing: true,
+        serverSide: true,
+        destroy: true,
+        ajax: {
+            url: "{{ route('fetch_doc_details.get') }}",
+            type: "GET",
+            data: {
+                // Pass email as a parameter if needed
+                user_id:user_id_int
+
+            }
+        },
+
+        columns: [
+
+        { data: 'category', name: 'category' },
+        { data: 'file_name', name: 'file_name' },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            render: function (data, type, row, meta) {
+                return data; // Render HTML content for actions
+            }
+        }
+    ]
+    });
+}
    </script>
 

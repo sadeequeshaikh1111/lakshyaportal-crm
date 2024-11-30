@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\candidate_controller;
-
+use App\Http\Controllers\documents_controller;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,7 +37,13 @@ Route::get('get_eduDetails_ajax',[App\Http\Controllers\educational_details_contr
 Route::delete('delete_edu_detail',[App\Http\Controllers\educational_details_controllers::Class,'delete_edu_detail'])->name('delete_edu_detail.delete');
 Route::post('save_edu_details', [App\Http\Controllers\educational_details_controllers::Class, 'save_edu_details'])->name('save_edu_details.post');
 
+//Upload Documents route
+Route::get('load_docs',[App\Http\Controllers\documents_controller::Class,'load_docs'])->name('load_docs.get');
+Route::post('save_document_details', [App\Http\Controllers\documents_controller::Class, 'save_document_details'])->name('save_document_details.post');
+Route::get('fetch_doc_details',[App\Http\Controllers\documents_controller::Class,'fetch_doc_details'])->name('fetch_doc_details.get');
+Route::delete('delete_doc_detail',[App\Http\Controllers\documents_controller::Class,'delete_doc_detail'])->name('delete_doc_detail.delete');
 
+Route::get('Getdocument',[App\Http\Controllers\documents_controller::Class,'Getdocument'])->name('Getdocument.get');
 
 
 

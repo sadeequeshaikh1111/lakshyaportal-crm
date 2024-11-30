@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1b4875;
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
@@ -8,15 +8,10 @@ body {
 .container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: top;
     min-height: 100vh;
 }
 .main_container {
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    min-height: 100vh;
-
     display: flex;
     justify-content: center;
     align-items: top;
@@ -59,4 +54,20 @@ input, select, button {
 
 button {
     padding: 10px 15px;
+}
+
+
+.subdiv_left {
+    flex: 1; /* Ensures equal width with right column */
+    background-color: #f0f0f0;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+/* Style for the right column */
+.subdiv_right {
+    flex: 1; /* Ensures equal width with left column */
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ccc;
 }

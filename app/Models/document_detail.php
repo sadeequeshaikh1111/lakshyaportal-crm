@@ -15,6 +15,8 @@ class document_detail extends Model
         'category',
         'course',
         'file_name',
+        'Verified_Status',
+        'Verified_Status',
         'file_path',
     ];
 

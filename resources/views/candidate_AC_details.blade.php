@@ -296,7 +296,7 @@
 
     function getDocumentDetails(userId) {
         document.getElementById('user_id_doc').innerText = userId;
-        fetch_doc_details_ajax();
+        fetch_doc_details_ajax(userId);
 
         
     }
@@ -305,7 +305,7 @@
         $('#applied-exams').html('<p>Loading Applied Exams...</p>');
     }
 
-    function fetchEducationalDetails_ajax(user_id) {
+    function fetchEducationalDetails_ajax(user_id ) {
     console.log("Trying to load data");
     document.getElementById('user_id').innerText = user_id;
 
@@ -346,8 +346,8 @@
 
 
 
-function fetch_doc_details_ajax() {
-        const user_id = document.getElementById('user_id').innerText;
+function fetch_doc_details_ajax(userId) {
+        const user_id = userId;
         const user_id_int = parseInt(user_id, 10);
     console.log("Trying to load data for "+user_id );
 

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\educational_detail;
 use App\Models\document_detail;
 use Illuminate\Support\Facades\Storage;
+use App\Models\CandidateBasicDetail;
+
 
 use DataTables;
 
@@ -19,8 +21,13 @@ class documents_controller extends Controller
     public function load_docs(Request $request)
     {
     
-        $user = educational_detail::where('email', $request->email)->get()->pluck('edu_category');;
+        try{
+        $user = educational_detail::where('user_id', $request->user_id)->get()->pluck('edu_category');
         return $user;
+        }
+        catch(Exception $e)
+        {return $e;}
+       
 
         
     }
@@ -29,13 +36,14 @@ class documents_controller extends Controller
     {
 
  {
-    
+
+        $email = CandidateBasicDetail::where('user_id', $request->user_id)->value('email');
+
         // Validate the request
         $request->validate([
             'documentCategory' => 'required|string|max:255',
             'document' => 'required|string|max:255',
             'documentFile' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'email' => 'required|email',
         ]);
         $user_id=$request->input('user_id');
         $document=$request->input('document');
@@ -52,7 +60,7 @@ class documents_controller extends Controller
             $document->course = $request->input('document');
             $document->file_name = $fileName;
             $document->file_path =  $filePath;
-            $document->email = $request->input('email');
+            $document->email = $email;
             $document->user_id = $request->input('user_id');
             
             $document->save();
@@ -77,11 +85,14 @@ class documents_controller extends Controller
         $data=document_detail::where('user_id',$user_id)->get();
 
         return DataTables::of($data)->addColumn('action', function($data){
-        $btn = '<a type="button" id='.$data->id.' class="btn btn-danger btn-sm" onclick=get_Doc(this.id)>Delete</a><a type="button"></a>';
-        return $btn;
-        })
-        ->rawColumns(['action'])
-        ->make(true);
+            $btn = '<a type="button" id='.$data->id.' style="color: blue; margin-right: 2px; border: 1px solid; padding: 2px;" onclick=get_Doc(this.id)>View</a>';
+            $btn .= '<a type="button" id='.$data->id.' style="color: green; margin-right: 2px; border: 1px solid; padding: 2px;" oonclick=Verify_doc(this.id)>Verify</a>';
+            $btn .= '<a type="button" id='.$data->id.' style="color: red; margin-right: 2px; border: 1px solid; padding: 2px;" o onclick=Delete_doc(this.id)>Reject</a>';
+            return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    
         
     }   
 
@@ -109,13 +120,14 @@ public function Getdocument(Request $request)
 {
 try{
     
+
+    //working code
     $data=document_detail::findorfail($request->id);
-    $url = env('Resource_URL');
+    $url = env('lakshya_portal_Resource_URL');
     $resource_url=$url."/storage/".$data->file_path;
     $resource_url = str_replace(['//', ' '], ['/', '%20'], $resource_url);
-
     return str_replace('http:/','',$resource_url);
-
+//Working code
 
 }
 catch (Exception $e)

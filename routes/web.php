@@ -42,6 +42,7 @@ Route::get('load_docs',[App\Http\Controllers\documents_controller::Class,'load_d
 Route::post('save_document_details', [App\Http\Controllers\documents_controller::Class, 'save_document_details'])->name('save_document_details.post');
 Route::get('fetch_doc_details',[App\Http\Controllers\documents_controller::Class,'fetch_doc_details'])->name('fetch_doc_details.get');
 Route::delete('delete_doc_detail',[App\Http\Controllers\documents_controller::Class,'delete_doc_detail'])->name('delete_doc_detail.delete');
+Route::get('load_docs_ajax',[App\Http\Controllers\documents_controller::Class,'load_docs'])->name('load_docs_ajax.get');
 
 Route::get('Getdocument',[App\Http\Controllers\documents_controller::Class,'Getdocument'])->name('Getdocument.get');
 

@@ -81,8 +81,49 @@
 
                save_documentdetails(userIdDocContent)
     }
-function get_Doc(id) {
-    console.log("Trying to delete data with ID:", id);
+    function get_Doc(id) {
+    try {
+        alert("getting doc "+id)
+        get_Doc_from_CRM(id); // Call the function
+    } catch (exception) {
+        alert(exception); // Show the exception message
+    }
+}
+
+function get_Doc_from_CRM(id) {
+    alert("Trying to load document from CRM")
+   
+   const user_id = document.getElementById('user_id').innerText;
+   $.ajaxSetup({
+       headers: {
+           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+       }
+   });
+
+   $.ajax({
+       url: "{{ route('Getdocument_CRM.get') }}",
+       type: "get",
+       data: {
+           id: id
+       },
+       success: function(response) {
+           console.log("Data deleted successfully:");
+           console.log(response);
+           url=response.url;
+           source=response.source;
+           loadObject(url, id,source);
+   // You can process the response data here, e.g., update the table
+       },
+       error: function(xhr, status, error) {
+           console.error("Error deleting data:", error);
+       }
+   });
+} 
+
+
+
+function get_Doc_from_portal(id) {
+   
     const user_id = document.getElementById('user_id').innerText;
     $.ajaxSetup({
         headers: {
@@ -99,22 +140,53 @@ function get_Doc(id) {
         success: function(response) {
             console.log("Data deleted successfully:");
             console.log(response);
-            loadObject(response)
+            loadObject(response,id)
             
             // You can process the response data here, e.g., update the table
 
         },
         error: function(xhr, status, error) {
             console.error("Error deleting data:", error);
+            
         }
     });
 } 
 
-function loadObject(url) {
-    url1="http://"+url
-    const viewerDiv = document.getElementById('viewer');
-const iframe = document.getElementById('imageViewer');
-iframe.src=url1;}
+function loadObject(url, id,source) {
+    alert("source :" +source)
+   // for loading from portal const url1 = "http://" + url;
+    if(source=="CRM")
+    {        
+        alert(url)
+        const iframe = document.getElementById('imageViewer');
+        // Set the iframe source
+        iframe.src = url;
+    }
+    else
+    {
+        alert("load object else block: "+url)
+        url1 = "http://" + url;
+        const iframe = document.getElementById('imageViewer');
+        iframe.src = url1;
+        save_doc_CRM(url1);
+        
+ 
+    }
+
+
+
+
+   
+
+
+
+   
+}
+
+
+
+
+
 
 
 function loadDocumentsAjax(cat)
@@ -144,6 +216,7 @@ console.log("User id is"+userIdDocContent)
         error: function(xhr, status, error) {
             // Handle error here
             console.error("Error loading documents: ", error);
+
             alert("An error occurred while fetching documents.");
         }
     });
@@ -228,6 +301,35 @@ function load_docs(category,user_id) {
 
 
 
+function save_doc_CRM(url1)
+{
+    alert("saving in CRM for ");
+            
+            
+              $.ajax({
+                  url: '{{ route("save_doc_CRM.post") }}',
+                  type: 'POST',
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                  data: {url1:url1},
+                  processData: false,
+                  contentType: false,
+                  success: function(response) {
+                      console.log('Upload details saved successfully:', response);
+                      alert('doc saved in crm successfully!');
+                      
+                  },
+                  error: function(xhr, status, error) {
+                      console.error('Error saving upload details:', error);
+                      alert('Error saving upload details: ' + error);
+                  }
+              });
+
+}
+
+
+
           function Delete_doc(id) {
     console.log("Trying to delete data with ID:", id);
     const user_id = document.getElementById('user_id').innerText;
@@ -244,7 +346,7 @@ function load_docs(category,user_id) {
             id: id
         },
         success: function(response) {
-            console.log("Data deleted successfully:");
+           
             console.log(response);
             fetch_doc_details_ajax(email);
             // You can process the response data here, e.g., update the table
@@ -255,6 +357,9 @@ function load_docs(category,user_id) {
         }
     });
 } 
+
+
+
 
 </script>
 

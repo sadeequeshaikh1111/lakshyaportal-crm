@@ -45,9 +45,8 @@ Route::delete('delete_doc_detail',[App\Http\Controllers\documents_controller::Cl
 Route::get('load_docs_ajax',[App\Http\Controllers\documents_controller::Class,'load_docs'])->name('load_docs_ajax.get');
 
 Route::get('Getdocument',[App\Http\Controllers\documents_controller::Class,'Getdocument'])->name('Getdocument.get');
-
-
-
+Route::get('Getdocument_CRM',[App\Http\Controllers\documents_controller::Class,'Getdocument_CRM'])->name('Getdocument_CRM.get');
+Route::post('save_doc_CRM', [App\Http\Controllers\documents_controller::Class, 'save_doc_CRM'])->name('save_doc_CRM.post');
 
 
 require __DIR__.'/auth.php';
